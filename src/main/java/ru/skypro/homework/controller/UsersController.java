@@ -29,21 +29,21 @@ public class UsersController {
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
-      
+
     @PatchMapping("/me")
-    public ResponseEntity<UpdateUser> updateUser (@RequestBody UpdateUser updateUser) {
+    public ResponseEntity<UpdateUser> updateUser(@RequestBody UpdateUser updateUser) {
         if (true) {
             return ResponseEntity.ok(new UpdateUser());
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
-      
+
     @GetMapping("/me")
     public ResponseEntity<User> getUser() {
-                if (true) {
-                    return ResponseEntity.ok(new User());
-                }
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        if (true) {
+            return ResponseEntity.ok(new User());
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
     @PostMapping("/set_password")
