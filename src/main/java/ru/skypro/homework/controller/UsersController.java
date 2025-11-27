@@ -14,13 +14,13 @@ import ru.skypro.homework.dto.NewPassword;
 @RequiredArgsConstructor
 public class UsersController {
 
-    private final UsersService usersService;
+    //private final UsersService usersService;
 
     @PostMapping("/set_password")
     public ResponseEntity<?> setPassword(@RequestBody NewPassword newPassword) {
-        if () {
+        if (true) {
             return ResponseEntity.ok().build();
-        } else if () {
+        } else if (false) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
