@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.UpdateUser;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +22,13 @@ import ru.skypro.homework.dto.NewPassword;
 @RequiredArgsConstructor
 public class UsersController {
 
+    @PatchMapping("/me/image")
+    public ResponseEntity<?> updateAvatar(@RequestParam("image") MultipartFile image) {
+        if (true) {
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+      
     @PatchMapping("/me")
     public ResponseEntity<UpdateUser> updateUser (@RequestBody UpdateUser updateUser) {
         if (true) {
