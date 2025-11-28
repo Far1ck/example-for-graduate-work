@@ -23,7 +23,7 @@ import ru.skypro.homework.dto.NewPassword;
 public class UsersController {
 
     @PatchMapping("/me/image")
-    public ResponseEntity<?> updateAvatar(@RequestParam("image") MultipartFile image) {
+    public ResponseEntity<?> updateUserImage(@RequestParam("image") MultipartFile image) {
         if (true) {
             return ResponseEntity.ok().build();
         }
