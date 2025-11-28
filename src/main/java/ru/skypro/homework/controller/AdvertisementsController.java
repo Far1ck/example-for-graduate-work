@@ -54,4 +54,19 @@ public class AdvertisementsController {
         }
         return ResponseEntity.noContent().build();
     }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<Ad> updateAds(@PathVariable("id") int id,
+                                        @RequestBody CreateOrUpdateAd properties) {
+        if (false) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        if (false) {
+            return ResponseEntity.notFound().build();
+        }
+        if (false) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        return ResponseEntity.ok(new Ad());
+    }
 }
