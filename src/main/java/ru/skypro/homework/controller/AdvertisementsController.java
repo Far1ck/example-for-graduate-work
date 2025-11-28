@@ -78,4 +78,20 @@ public class AdvertisementsController {
         }
         return ResponseEntity.ok(new Ads());
     }
+
+    @PatchMapping(value = "/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<byte[]> updateImage(@PathVariable("id") int id,
+                                              @RequestParam("image") MultipartFile image) {
+        byte[] updatedImage = new byte[1];
+        if (false) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        if (false) {
+            return ResponseEntity.notFound().build();
+        }
+        if (false) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM).body(updatedImage);
+    }
 }
