@@ -70,4 +70,12 @@ public class AdvertisementsController {
         }
         return ResponseEntity.ok(new Ad());
     }
+
+    @GetMapping("/me")
+    public ResponseEntity<Ads> getAdsMe() {
+        if (false) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        return ResponseEntity.ok(new Ads());
+    }
 }
