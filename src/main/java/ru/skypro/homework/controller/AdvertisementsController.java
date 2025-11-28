@@ -2,6 +2,7 @@ package ru.skypro.homework.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,7 +22,7 @@ public class AdvertisementsController {
         return ResponseEntity.ok(new Ads());
     }
 
-    @PostMapping
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Ad> addAd(@RequestParam("properties") CreateOrUpdateAd properties,
                                     @RequestParam("image") MultipartFile image) {
         if (false) {
@@ -53,5 +54,20 @@ public class AdvertisementsController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<Ad> updateAds(@PathVariable("id") int id,
+                                        @RequestBody CreateOrUpdateAd properties) {
+        if (false) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        if (false) {
+            return ResponseEntity.notFound().build();
+        }
+        if (false) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        return ResponseEntity.ok(new Ad());
     }
 }
