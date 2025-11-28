@@ -2,6 +2,7 @@ package ru.skypro.homework.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,7 +23,7 @@ import ru.skypro.homework.dto.NewPassword;
 @RequiredArgsConstructor
 public class UsersController {
 
-    @PatchMapping("/me/image")
+    @PatchMapping(value = "/me/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updateUserImage(@RequestParam("image") MultipartFile image) {
         if (true) {
             return ResponseEntity.ok().build();
