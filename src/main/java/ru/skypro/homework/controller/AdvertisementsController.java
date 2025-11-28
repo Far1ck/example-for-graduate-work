@@ -1,5 +1,6 @@
 package ru.skypro.homework.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -23,7 +24,7 @@ public class AdvertisementsController {
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Ad> addAd(@RequestParam("properties") CreateOrUpdateAd properties,
+    public ResponseEntity<Ad> addAd(@RequestParam("properties") @Valid CreateOrUpdateAd properties,
                                     @RequestParam("image") MultipartFile image) {
         if (false) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
