@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.Ad;
 import ru.skypro.homework.dto.Ads;
 import ru.skypro.homework.dto.CreateOrUpdateAd;
+import ru.skypro.homework.dto.ExtendedAd;
 
 @CrossOrigin(value = "http://localhost:3000")
 @RestController
@@ -27,5 +28,16 @@ public class AdvertisementsController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(new Ad());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ExtendedAd> getAds(@PathVariable("id") int id) {
+        if(false) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        if(false) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(new ExtendedAd());
     }
 }
