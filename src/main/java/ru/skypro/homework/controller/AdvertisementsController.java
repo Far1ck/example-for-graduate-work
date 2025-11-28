@@ -23,7 +23,7 @@ public class AdvertisementsController {
 
     @PostMapping
     public ResponseEntity<Ad> addAd(@RequestParam("properties") CreateOrUpdateAd properties,
-                                       @RequestParam("image") MultipartFile image) {
+                                    @RequestParam("image") MultipartFile image) {
         if (false) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
@@ -32,12 +32,26 @@ public class AdvertisementsController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ExtendedAd> getAds(@PathVariable("id") int id) {
-        if(false) {
+        if (false) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        if(false) {
+        if (false) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(new ExtendedAd());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> removeAd(@PathVariable("id") int id) {
+        if (false) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        if (false) {
+            return ResponseEntity.notFound().build();
+        }
+        if (false) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        return ResponseEntity.noContent().build();
     }
 }
