@@ -17,10 +17,10 @@ public class CommentsController {
     @GetMapping("/{id}/comments")
     public ResponseEntity<Comments> getComments(@PathVariable("id") int id) {
         if (false) {
-            ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         if (false) {
-            ResponseEntity.notFound().build();
+            return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(new Comments());
     }
@@ -41,14 +41,30 @@ public class CommentsController {
     public ResponseEntity<?> deleteComment(@PathVariable("adId") int adId,
                                            @PathVariable("commentId") int commentId) {
         if (false) {
-            ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         if (false) {
-            ResponseEntity.notFound().build();
+            return ResponseEntity.notFound().build();
         }
         if (false) {
-            ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/{adId}/comments/{commentId}")
+    public ResponseEntity<Comment> updateComment(@PathVariable("adId") int adId,
+                                           @PathVariable("commentId") int commentId,
+                                           @RequestBody CreateOrUpdateComment properties) {
+        if (false) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        if (false) {
+            return ResponseEntity.notFound().build();
+        }
+        if (false) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        return ResponseEntity.ok(new Comment());
     }
 }
