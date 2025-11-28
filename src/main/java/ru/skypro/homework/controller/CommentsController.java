@@ -36,4 +36,19 @@ public class CommentsController {
         }
         return ResponseEntity.ok(new Comment());
     }
+
+    @DeleteMapping("/{adId}/comments/{commentId}")
+    public ResponseEntity<?> deleteComment(@PathVariable("adId") int adId,
+                                           @PathVariable("commentId") int commentId) {
+        if (false) {
+            ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        if (false) {
+            ResponseEntity.notFound().build();
+        }
+        if (false) {
+            ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        return ResponseEntity.ok().build();
+    }
 }
