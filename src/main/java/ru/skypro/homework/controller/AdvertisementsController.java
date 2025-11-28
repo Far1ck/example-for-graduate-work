@@ -17,12 +17,12 @@ import ru.skypro.homework.dto.ExtendedAd;
 public class AdvertisementsController {
 
     @GetMapping
-    public ResponseEntity<Ads> getAds() {
+    public ResponseEntity<Ads> getAllAds() {
         return ResponseEntity.ok(new Ads());
     }
 
     @PostMapping
-    public ResponseEntity<Ad> createAd(@RequestParam("properties") CreateOrUpdateAd properties,
+    public ResponseEntity<Ad> addAd(@RequestParam("properties") CreateOrUpdateAd properties,
                                        @RequestParam("image") MultipartFile image) {
         if (false) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
