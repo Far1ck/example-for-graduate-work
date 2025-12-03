@@ -6,8 +6,11 @@ import jakarta.persistence.*;
 @Table(name = "comments")
 public class CommentEntity {
 
+    @Column(name = "author_image")
     private String authorImage;
+    @Column(name = "author_first_name")
     private String authorFirstName;
+    @Column(name = "created_at")
     private long createdAt;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
