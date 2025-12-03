@@ -1,5 +1,7 @@
 package ru.skypro.homework.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -24,6 +26,13 @@ import ru.skypro.homework.dto.NewPassword;
 public class UsersController {
 
     @PatchMapping(value = "/me/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(
+            summary = "Обновление аватара авторизованного пользователя",
+            tags = {"Пользователи"},
+            operationId = "updateUserImage"
+    )
+    @ApiResponse(responseCode = "200", description = "OK")
+    @ApiResponse(responseCode = "401", description = "Unauthorized")
     public ResponseEntity<?> updateUserImage(@RequestParam("image") MultipartFile image) {
         if (true) {
             return ResponseEntity.ok().build();
@@ -32,6 +41,13 @@ public class UsersController {
     }
 
     @PatchMapping("/me")
+    @Operation(
+            summary = "Обновление информации об авторизованном пользователе",
+            tags = {"Пользователи"},
+            operationId = "updateUser"
+    )
+    @ApiResponse(responseCode = "200", description = "OK")
+    @ApiResponse(responseCode = "401", description = "Unauthorized")
     public ResponseEntity<UpdateUser> updateUser(@RequestBody UpdateUser updateUser) {
         if (true) {
             return ResponseEntity.ok(new UpdateUser());
@@ -40,6 +56,13 @@ public class UsersController {
     }
 
     @GetMapping("/me")
+    @Operation(
+            summary = "Получение информации об авторизованном пользователе",
+            tags = {"Пользователи"},
+            operationId = "getUser"
+    )
+    @ApiResponse(responseCode = "200", description = "OK")
+    @ApiResponse(responseCode = "401", description = "Unauthorized")
     public ResponseEntity<User> getUser() {
         if (true) {
             return ResponseEntity.ok(new User());
@@ -48,6 +71,14 @@ public class UsersController {
     }
 
     @PostMapping("/set_password")
+    @Operation(
+            summary = "Обновление пароля",
+            tags = {"Пользователи"},
+            operationId = "setPassword"
+    )
+    @ApiResponse(responseCode = "200", description = "OK")
+    @ApiResponse(responseCode = "401", description = "Unauthorized")
+    @ApiResponse(responseCode = "403", description = "Forbidden")
     public ResponseEntity<?> setPassword(@RequestBody NewPassword newPassword) {
         if (true) {
             return ResponseEntity.ok().build();

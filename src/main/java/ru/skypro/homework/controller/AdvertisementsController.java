@@ -1,5 +1,7 @@
 package ru.skypro.homework.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,6 +26,13 @@ public class AdvertisementsController {
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(
+            summary = "Добавление объявления",
+            tags = {"Объявления"},
+            operationId = "addAd"
+    )
+    @ApiResponse(responseCode = "201", description = "Created")
+    @ApiResponse(responseCode = "401", description = "Unauthorized")
     public ResponseEntity<Ad> addAd(@RequestParam("properties") @Valid CreateOrUpdateAd properties,
                                     @RequestParam("image") MultipartFile image) {
         if (false) {
@@ -33,6 +42,14 @@ public class AdvertisementsController {
     }
 
     @GetMapping("/{id}")
+    @Operation(
+            summary = "Получение информации об объявлении",
+            tags = {"Объявления"},
+            operationId = "getAds"
+    )
+    @ApiResponse(responseCode = "204", description = "No Content")
+    @ApiResponse(responseCode = "401", description = "Unauthorized")
+    @ApiResponse(responseCode = "404", description = "Not found")
     public ResponseEntity<ExtendedAd> getAds(@PathVariable("id") int id) {
         if (false) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -44,6 +61,15 @@ public class AdvertisementsController {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(
+            summary = "Удаление объявления",
+            tags = {"Объявления"},
+            operationId = "removeAd"
+    )
+    @ApiResponse(responseCode = "204", description = "No Content")
+    @ApiResponse(responseCode = "401", description = "Unauthorized")
+    @ApiResponse(responseCode = "403", description = "Forbidden")
+    @ApiResponse(responseCode = "404", description = "Not found")
     public ResponseEntity<?> removeAd(@PathVariable("id") int id) {
         if (false) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -58,6 +84,15 @@ public class AdvertisementsController {
     }
 
     @PatchMapping("/{id}")
+    @Operation(
+            summary = "Обновление информации об объявлении",
+            tags = {"Объявления"},
+            operationId = "updateAds"
+    )
+    @ApiResponse(responseCode = "200", description = "OK")
+    @ApiResponse(responseCode = "401", description = "Unauthorized")
+    @ApiResponse(responseCode = "403", description = "Forbidden")
+    @ApiResponse(responseCode = "404", description = "Not found")
     public ResponseEntity<Ad> updateAds(@PathVariable("id") int id,
                                         @RequestBody CreateOrUpdateAd properties) {
         if (false) {
@@ -73,6 +108,13 @@ public class AdvertisementsController {
     }
 
     @GetMapping("/me")
+    @Operation(
+            summary = "Получение объявлений авторизованного пользователя",
+            tags = {"Объявления"},
+            operationId = "getAdsMe"
+    )
+    @ApiResponse(responseCode = "200", description = "OK")
+    @ApiResponse(responseCode = "401", description = "Unauthorized")
     public ResponseEntity<Ads> getAdsMe() {
         if (false) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -81,6 +123,15 @@ public class AdvertisementsController {
     }
 
     @PatchMapping(value = "/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(
+            summary = "Обновление картинки объявления",
+            tags = {"Объявления"},
+            operationId = "updateImage"
+    )
+    @ApiResponse(responseCode = "200", description = "OK")
+    @ApiResponse(responseCode = "401", description = "Unauthorized")
+    @ApiResponse(responseCode = "403", description = "Forbidden")
+    @ApiResponse(responseCode = "404", description = "Not found")
     public ResponseEntity<byte[]> updateImage(@PathVariable("id") int id,
                                               @RequestParam("image") MultipartFile image) {
         byte[] updatedImage = new byte[1];
