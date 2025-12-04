@@ -1,9 +1,11 @@
 package ru.skypro.homework.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 @Entity
 @Table(name = "ads")
+@Data
 public class AdEntity {
 
     private String image;

@@ -1,9 +1,11 @@
 package ru.skypro.homework.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 @Entity
 @Table(name = "comments")
+@Data
 public class CommentEntity {
 
     @Column(name = "author_image")
