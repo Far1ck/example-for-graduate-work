@@ -1,12 +1,14 @@
 package ru.skypro.homework.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
 import ru.skypro.homework.dto.Role;
 
 import java.util.List;
 
 @Entity
 @Table(name = "users")
+@Data
 public class UserEntity {
 
     @Id
