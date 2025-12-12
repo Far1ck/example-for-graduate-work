@@ -13,7 +13,7 @@ public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
     private String email;
     @Column(name = "first_name")
     private String firstName;
@@ -22,6 +22,8 @@ public class UserEntity {
     private String phone;
     private Role role;
     private String image;
+    private String password;
+    private boolean enabled;
 
     @OneToMany(mappedBy = "commentAuthor", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<CommentEntity> comments;
