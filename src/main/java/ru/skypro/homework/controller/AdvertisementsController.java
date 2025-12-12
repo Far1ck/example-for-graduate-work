@@ -16,6 +16,8 @@ import ru.skypro.homework.dto.CreateOrUpdateAd;
 import ru.skypro.homework.dto.ExtendedAd;
 import ru.skypro.homework.service.AdsService;
 
+import java.io.IOException;
+
 @CrossOrigin(value = "http://localhost:3000")
 @RestController
 @RequestMapping("/ads")
@@ -39,7 +41,7 @@ public class AdvertisementsController {
     @ApiResponse(responseCode = "401", description = "Unauthorized")
     public ResponseEntity<Ad> addAd(@RequestParam("properties") @Valid CreateOrUpdateAd properties,
                                     @RequestParam("image") MultipartFile image,
-                                    Authentication authentication) {
+                                    Authentication authentication) throws IOException {
         Ad ad = adsService.addAd(authentication.getName(), properties, image);
         return ResponseEntity.status(HttpStatus.CREATED).body(ad);
     }
@@ -54,13 +56,11 @@ public class AdvertisementsController {
     @ApiResponse(responseCode = "401", description = "Unauthorized")
     @ApiResponse(responseCode = "404", description = "Not found")
     public ResponseEntity<ExtendedAd> getAds(@PathVariable("id") int id) {
-        if (false) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-        if (false) {
+        ExtendedAd result = adsService.getAds(id);
+        if (result == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(new ExtendedAd());
+        return ResponseEntity.ok(result);
     }
 
     @DeleteMapping("/{id}")

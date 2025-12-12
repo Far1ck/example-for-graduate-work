@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.Ad;
 import ru.skypro.homework.dto.Ads;
 import ru.skypro.homework.dto.CreateOrUpdateAd;
+import ru.skypro.homework.dto.ExtendedAd;
 import ru.skypro.homework.entity.AdEntity;
 import ru.skypro.homework.entity.UserEntity;
 import ru.skypro.homework.mapper.AdMapper;
@@ -65,6 +66,24 @@ public class AdsServiceImpl implements AdsService {
         ad.setDescription(properties.getDescription());
         adsRepository.save(ad);
         return adMapper.toDto(ad);
+    }
+
+    public ExtendedAd getAds(int id) {
+        AdEntity ad = adsRepository.findById(id).orElse(null);
+        if (ad == null) {
+            return null;
+        }
+        ExtendedAd extendedAd = new ExtendedAd();
+        extendedAd.setPk(ad.getId());
+        extendedAd.setAuthorFirstName(ad.getAdAuthor().getFirstName());
+        extendedAd.setAuthorLastName(ad.getAdAuthor().getLastName());
+        extendedAd.setDescription(ad.getDescription());
+        extendedAd.setEmail(ad.getAdAuthor().getEmail());
+        extendedAd.setImage(ad.getImage());
+        extendedAd.setPhone(ad.getAdAuthor().getPhone());
+        extendedAd.setPrice(ad.getPrice());
+        extendedAd.setTitle(ad.getTitle());
+        return extendedAd;
     }
 
     private String getFileExtension(String filename) {
