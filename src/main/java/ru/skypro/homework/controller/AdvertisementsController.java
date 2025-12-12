@@ -116,11 +116,9 @@ public class AdvertisementsController {
     )
     @ApiResponse(responseCode = "200", description = "OK")
     @ApiResponse(responseCode = "401", description = "Unauthorized")
-    public ResponseEntity<Ads> getAdsMe() {
-        if (false) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-        return ResponseEntity.ok(new Ads());
+    public ResponseEntity<Ads> getAdsMe(Authentication authentication) {
+        Ads ads = adsService.getAdsMe(authentication.getName());
+        return ResponseEntity.ok(ads);
     }
 
     @PatchMapping(value = "/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

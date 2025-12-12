@@ -117,6 +117,17 @@ public class AdsServiceImpl implements AdsService {
         return adMapper.toDto(ad);
     }
 
+    public Ads getAdsMe(String name) {
+        UserEntity user = usersRepository.findByEmail(name);
+        List<Ad> ads = user.getAds().stream()
+                .map(adMapper::toDto)
+                .toList();
+        Ads result = new Ads();
+        result.setCount(ads.size());
+        result.setResults(ads);
+        return result;
+    }
+
     private String getFileExtension(String filename) {
         return filename.substring(filename.lastIndexOf('.'));
     }
