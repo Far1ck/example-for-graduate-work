@@ -86,6 +86,20 @@ public class AdsServiceImpl implements AdsService {
         return extendedAd;
     }
 
+    public int removeAd(String name, int id) {
+        AdEntity ad = adsRepository.findById(id).orElse(null);
+        if (ad == null) {
+            return 1;
+        }
+        UserEntity user = usersRepository.findByEmail(name);
+        if (!user.getRole().name().equals("ADMIN") && !ad.getAdAuthor().getEmail().equals(name)) {
+            return 2;
+        }
+
+        adsRepository.deleteById(id);
+        return 0;
+    }
+
     private String getFileExtension(String filename) {
         return filename.substring(filename.lastIndexOf('.'));
     }
