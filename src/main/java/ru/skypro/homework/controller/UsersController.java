@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.skypro.homework.dto.NewPassword;
 import ru.skypro.homework.service.UserService;
 
+import java.io.IOException;
+
 @CrossOrigin(value = "http://localhost:3000")
 @RestController
 @RequestMapping("/users")
@@ -37,11 +39,12 @@ public class UsersController {
     )
     @ApiResponse(responseCode = "200", description = "OK")
     @ApiResponse(responseCode = "401", description = "Unauthorized")
-    public ResponseEntity<?> updateUserImage(@RequestParam("image") MultipartFile image) {
-        if (true) {
-            return ResponseEntity.ok().build();
+    public ResponseEntity<Void> updateUserImage(@RequestParam("image") MultipartFile image, Authentication authentication) throws IOException {
+        if (image.isEmpty() || !image.getContentType().startsWith("image/")) {
+            return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        userService.updateUserImage(authentication.getName(), image);
+        return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/me")
