@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.skypro.homework.dto.NewPassword;
-import ru.skypro.homework.service.UserService;
+import ru.skypro.homework.service.UsersService;
 
 import java.io.IOException;
 
@@ -29,7 +29,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class UsersController {
 
-    private final UserService userService;
+    private final UsersService usersService;
 
     @PatchMapping(value = "/me/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(
@@ -43,7 +43,7 @@ public class UsersController {
         if (image.isEmpty() || !image.getContentType().startsWith("image/")) {
             return ResponseEntity.badRequest().build();
         }
-        userService.updateUserImage(authentication.getName(), image);
+        usersService.updateUserImage(authentication.getName(), image);
         return ResponseEntity.ok().build();
     }
 
@@ -56,7 +56,7 @@ public class UsersController {
     @ApiResponse(responseCode = "200", description = "OK")
     @ApiResponse(responseCode = "401", description = "Unauthorized")
     public ResponseEntity<UpdateUser> updateUser(@RequestBody UpdateUser updateUser, Authentication authentication) {
-        return ResponseEntity.ok(userService.updateUser(authentication.getName(), updateUser));
+        return ResponseEntity.ok(usersService.updateUser(authentication.getName(), updateUser));
     }
 
     @GetMapping("/me")
@@ -69,7 +69,7 @@ public class UsersController {
     @ApiResponse(responseCode = "401", description = "Unauthorized")
     public ResponseEntity<User> getUser(Authentication authentication) {
         String username = authentication.getName();
-        return ResponseEntity.ok(userService.getUser(username));
+        return ResponseEntity.ok(usersService.getUser(username));
     }
 
     @PostMapping("/set_password")
@@ -82,7 +82,7 @@ public class UsersController {
     @ApiResponse(responseCode = "401", description = "Unauthorized")
     @ApiResponse(responseCode = "403", description = "Forbidden")
     public ResponseEntity<Void> setPassword(@RequestBody NewPassword newPassword, Authentication authentication) {
-        if (userService.setPassword(authentication.getName(), newPassword)) {
+        if (usersService.setPassword(authentication.getName(), newPassword)) {
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();

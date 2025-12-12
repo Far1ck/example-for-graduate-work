@@ -9,62 +9,61 @@ import ru.skypro.homework.dto.UpdateUser;
 import ru.skypro.homework.dto.User;
 import ru.skypro.homework.entity.UserEntity;
 import ru.skypro.homework.mapper.UserMapper;
-import ru.skypro.homework.repository.UserRepository;
-import ru.skypro.homework.service.UserService;
+import ru.skypro.homework.repository.UsersRepository;
+import ru.skypro.homework.service.UsersService;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.Random;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class UsersServiceImpl implements UsersService {
 
-    private final UserRepository userRepository;
+    private final UsersRepository usersRepository;
     private final PasswordEncoder encoder;
     private final UserMapper mapper;
     @Value("${app.avatar.dir}")
     private String avatarDirectoryPath;
 
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder encoder, UserMapper mapper) {
-        this.userRepository = userRepository;
+    public UsersServiceImpl(UsersRepository usersRepository, PasswordEncoder encoder, UserMapper mapper) {
+        this.usersRepository = usersRepository;
         this.encoder = encoder;
         this.mapper = mapper;
     }
 
     public void createUser(UserEntity user) {
-        userRepository.save(user);
+        usersRepository.save(user);
     };
 
     public boolean setPassword(String username, NewPassword password) {
-        UserEntity user = userRepository.findByEmail(username);
+        UserEntity user = usersRepository.findByEmail(username);
         if (!encoder.matches(password.getCurrentPassword(), user.getPassword())) {
             return false;
         }
         user.setPassword(encoder.encode(password.getNewPassword()));
-        userRepository.save(user);
+        usersRepository.save(user);
         return true;
     }
 
     public User getUser(String username) {
-        UserEntity user = userRepository.findByEmail(username);
+        UserEntity user = usersRepository.findByEmail(username);
         return mapper.toDto(user);
     }
 
     public UpdateUser updateUser(String username, UpdateUser updateUser) {
-        UserEntity user = userRepository.findByEmail(username);
+        UserEntity user = usersRepository.findByEmail(username);
         user.setFirstName(updateUser.getFirstName());
         user.setLastName(updateUser.getLastName());
         user.setPhone(updateUser.getPhone());
-        userRepository.save(user);
+        usersRepository.save(user);
         return updateUser;
     }
 
     public void updateUserImage(String name, MultipartFile image) throws IOException {
         Path avatarDirectory = Paths.get(avatarDirectoryPath);
-        UserEntity user = userRepository.findByEmail(name);
+        UserEntity user = usersRepository.findByEmail(name);
         Files.createDirectories(avatarDirectory);
         String extension = getFileExtension(image.getOriginalFilename());
         String fileName = this.getClass().getSimpleName() + user.getId() + extension;

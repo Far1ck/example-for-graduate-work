@@ -7,13 +7,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.Ad;
 import ru.skypro.homework.dto.Ads;
 import ru.skypro.homework.dto.CreateOrUpdateAd;
 import ru.skypro.homework.dto.ExtendedAd;
-import ru.skypro.homework.service.AdService;
+import ru.skypro.homework.service.AdsService;
 
 @CrossOrigin(value = "http://localhost:3000")
 @RestController
@@ -21,11 +22,11 @@ import ru.skypro.homework.service.AdService;
 @RequiredArgsConstructor
 public class AdvertisementsController {
 
-    private final AdService adService;
+    private final AdsService adsService;
 
     @GetMapping
     public ResponseEntity<Ads> getAllAds() {
-        return ResponseEntity.ok(adService.getAllAds());
+        return ResponseEntity.ok(adsService.getAllAds());
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -37,11 +38,10 @@ public class AdvertisementsController {
     @ApiResponse(responseCode = "201", description = "Created")
     @ApiResponse(responseCode = "401", description = "Unauthorized")
     public ResponseEntity<Ad> addAd(@RequestParam("properties") @Valid CreateOrUpdateAd properties,
-                                    @RequestParam("image") MultipartFile image) {
-        if (false) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-        return ResponseEntity.status(HttpStatus.CREATED).body(new Ad());
+                                    @RequestParam("image") MultipartFile image,
+                                    Authentication authentication) {
+        Ad ad = adsService.addAd(authentication.getName(), properties, image);
+        return ResponseEntity.status(HttpStatus.CREATED).body(ad);
     }
 
     @GetMapping("/{id}")

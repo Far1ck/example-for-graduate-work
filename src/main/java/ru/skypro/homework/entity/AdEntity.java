@@ -14,6 +14,7 @@ public class AdEntity {
     private Integer id;
     private int price;
     private String title;
+    private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author")
