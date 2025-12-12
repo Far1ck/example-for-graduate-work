@@ -8,7 +8,9 @@ CREATE TABLE users (
     last_name VARCHAR(20),
     phone VARCHAR(20) NOT NULL,
     role VARCHAR(10) NOT NULL,
-    image VARCHAR(100)
+    image VARCHAR(100),
+    password VARCHAR(255) NOT NULL,
+    enabled BOOLEAN NOT NULL DEFAULT TRUE
 );
 
 CREATE TABLE ads (

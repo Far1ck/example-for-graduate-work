@@ -6,18 +6,23 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
 import ru.skypro.homework.dto.Register;
+import ru.skypro.homework.entity.UserEntity;
 import ru.skypro.homework.service.AuthService;
+import ru.skypro.homework.service.UserService;
 
 @Service
 public class AuthServiceImpl implements AuthService {
 
     private final UserDetailsManager manager;
     private final PasswordEncoder encoder;
+    private final UserService userService;
 
     public AuthServiceImpl(UserDetailsManager manager,
-                           PasswordEncoder passwordEncoder) {
+                           PasswordEncoder passwordEncoder,
+                           UserService userService) {
         this.manager = manager;
         this.encoder = passwordEncoder;
+        this.userService = userService;
     }
 
     @Override
@@ -34,13 +39,15 @@ public class AuthServiceImpl implements AuthService {
         if (manager.userExists(register.getUsername())) {
             return false;
         }
-        manager.createUser(
-                User.builder()
-                        .passwordEncoder(this.encoder::encode)
-                        .password(register.getPassword())
-                        .username(register.getUsername())
-                        .roles(register.getRole().name())
-                        .build());
+        UserEntity newUser = new UserEntity();
+        newUser.setEmail(register.getUsername());
+        newUser.setFirstName(register.getFirstName());
+        newUser.setLastName(register.getLastName());
+        newUser.setPhone(register.getPhone());
+        newUser.setRole(register.getRole());
+        newUser.setPassword(encoder.encode(register.getPassword()));
+        newUser.setEnabled(true);
+        userService.createUser(newUser);
         return true;
     }
 
