@@ -100,6 +100,23 @@ public class AdsServiceImpl implements AdsService {
         return 0;
     }
 
+    public Ad updateAds(String name, CreateOrUpdateAd properties, int id) throws SecurityException {
+        AdEntity ad = adsRepository.findById(id).orElse(null);
+        if (ad == null) {
+            return null;
+        }
+        UserEntity user = usersRepository.findByEmail(name);
+        if (!user.getRole().name().equals("ADMIN") && !ad.getAdAuthor().getEmail().equals(name)) {
+            throw new SecurityException();
+        }
+
+        ad.setTitle(properties.getTitle());
+        ad.setPrice(properties.getPrice());
+        ad.setDescription(properties.getDescription());
+        adsRepository.save(ad);
+        return adMapper.toDto(ad);
+    }
+
     private String getFileExtension(String filename) {
         return filename.substring(filename.lastIndexOf('.'));
     }
