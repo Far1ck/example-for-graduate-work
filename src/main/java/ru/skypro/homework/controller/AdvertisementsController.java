@@ -95,17 +95,17 @@ public class AdvertisementsController {
     @ApiResponse(responseCode = "403", description = "Forbidden")
     @ApiResponse(responseCode = "404", description = "Not found")
     public ResponseEntity<Ad> updateAds(@PathVariable("id") int id,
-                                        @RequestBody CreateOrUpdateAd properties) {
-        if (false) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-        if (false) {
-            return ResponseEntity.notFound().build();
-        }
-        if (false) {
+                                        @RequestBody CreateOrUpdateAd properties,
+                                        Authentication authentication) {
+        try {
+            Ad ad = adsService.updateAds(authentication.getName(), properties, id);
+            if (ad == null) {
+                return ResponseEntity.notFound().build();
+            }
+            return ResponseEntity.ok(ad);
+        } catch (SecurityException e) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-        return ResponseEntity.ok(new Ad());
     }
 
     @GetMapping("/me")
