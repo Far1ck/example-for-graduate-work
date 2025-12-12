@@ -52,11 +52,8 @@ public class UsersController {
     )
     @ApiResponse(responseCode = "200", description = "OK")
     @ApiResponse(responseCode = "401", description = "Unauthorized")
-    public ResponseEntity<UpdateUser> updateUser(@RequestBody UpdateUser updateUser) {
-        if (true) {
-            return ResponseEntity.ok(new UpdateUser());
-        }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    public ResponseEntity<UpdateUser> updateUser(@RequestBody UpdateUser updateUser, Authentication authentication) {
+        return ResponseEntity.ok(userService.updateUser(authentication.getName(), updateUser));
     }
 
     @GetMapping("/me")

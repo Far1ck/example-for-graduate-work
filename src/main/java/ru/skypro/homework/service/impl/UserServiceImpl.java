@@ -3,6 +3,7 @@ package ru.skypro.homework.service.impl;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.skypro.homework.dto.NewPassword;
+import ru.skypro.homework.dto.UpdateUser;
 import ru.skypro.homework.dto.User;
 import ru.skypro.homework.entity.UserEntity;
 import ru.skypro.homework.mapper.UserMapper;
@@ -39,5 +40,14 @@ public class UserServiceImpl implements UserService {
     public User getUser(String username) {
         UserEntity user = userRepository.findByEmail(username);
         return mapper.toDto(user);
+    }
+
+    public UpdateUser updateUser(String username, UpdateUser updateUser) {
+        UserEntity user = userRepository.findByEmail(username);
+        user.setFirstName(updateUser.getFirstName());
+        user.setLastName(updateUser.getLastName());
+        user.setPhone(updateUser.getPhone());
+        userRepository.save(user);
+        return updateUser;
     }
 }
