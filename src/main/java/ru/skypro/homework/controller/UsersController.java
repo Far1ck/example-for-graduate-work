@@ -67,11 +67,9 @@ public class UsersController {
     )
     @ApiResponse(responseCode = "200", description = "OK")
     @ApiResponse(responseCode = "401", description = "Unauthorized")
-    public ResponseEntity<User> getUser() {
-        if (true) {
-            return ResponseEntity.ok(new User());
-        }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    public ResponseEntity<User> getUser(Authentication authentication) {
+        String username = authentication.getName();
+        return ResponseEntity.ok(userService.getUser(username));
     }
 
     @PostMapping("/set_password")
