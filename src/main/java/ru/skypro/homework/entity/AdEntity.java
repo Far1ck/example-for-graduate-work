@@ -11,7 +11,7 @@ public class AdEntity {
     private String image;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
     private int price;
     private String title;
 
