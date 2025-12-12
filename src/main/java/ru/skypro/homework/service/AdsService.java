@@ -13,4 +13,5 @@ public interface AdsService {
     Ads getAllAds();
     Ad addAd(String name, CreateOrUpdateAd properties, MultipartFile image) throws IOException;
     ExtendedAd getAds(int id);
+    int removeAd(String name, int id);
 }

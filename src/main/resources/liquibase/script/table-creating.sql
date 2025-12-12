@@ -31,6 +31,9 @@ CREATE TABLE comments (
     created_at BIGINT NOT NULL,
     text VARCHAR(64) NOT NULL,
     author INT NOT NULL,
+    ad INT NOT NULL,
     CONSTRAINT com_author
-    FOREIGN KEY (author) REFERENCES users (id) ON DELETE CASCADE
+    FOREIGN KEY (author) REFERENCES users (id) ON DELETE CASCADE,
+    CONSTRAINT com_ad
+    FOREIGN KEY (ad) REFERENCES ads (id) ON DELETE CASCADE
 );

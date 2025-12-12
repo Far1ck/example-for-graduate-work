@@ -73,14 +73,12 @@ public class AdvertisementsController {
     @ApiResponse(responseCode = "401", description = "Unauthorized")
     @ApiResponse(responseCode = "403", description = "Forbidden")
     @ApiResponse(responseCode = "404", description = "Not found")
-    public ResponseEntity<?> removeAd(@PathVariable("id") int id) {
-        if (false) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-        if (false) {
+    public ResponseEntity<Void> removeAd(@PathVariable("id") int id, Authentication authentication) {
+        int result = adsService.removeAd(authentication.getName(), id);
+        if (result == 1) {
             return ResponseEntity.notFound().build();
         }
-        if (false) {
+        if (result == 2) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         return ResponseEntity.noContent().build();
