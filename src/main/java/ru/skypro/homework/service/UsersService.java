@@ -8,7 +8,7 @@ import ru.skypro.homework.entity.UserEntity;
 
 import java.io.IOException;
 
-public interface UserService {
+public interface UsersService {
     void createUser(UserEntity user);
     boolean setPassword(String username, NewPassword passwords);
     User getUser(String username);

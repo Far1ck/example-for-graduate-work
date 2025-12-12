@@ -19,6 +19,7 @@ CREATE TABLE ads (
     price INT NOT NULL,
     title VARCHAR(50) NOT NULL,
     author INT NOT NULL,
+    description VARCHAR(64),
     CONSTRAINT ad_author
     FOREIGN KEY (author) REFERENCES users (id) ON DELETE CASCADE
 );
