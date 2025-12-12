@@ -5,10 +5,12 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.Ad;
 import ru.skypro.homework.dto.Ads;
 import ru.skypro.homework.dto.CreateOrUpdateAd;
+import ru.skypro.homework.dto.ExtendedAd;
 
 import java.io.IOException;
 
 public interface AdsService {
     Ads getAllAds();
-    Ad addAd(String name, @Valid CreateOrUpdateAd properties, MultipartFile image) throws IOException;
+    Ad addAd(String name, CreateOrUpdateAd properties, MultipartFile image) throws IOException;
+    ExtendedAd getAds(int id);
 }
