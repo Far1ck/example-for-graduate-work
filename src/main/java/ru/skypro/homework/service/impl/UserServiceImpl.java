@@ -1,7 +1,9 @@
 package ru.skypro.homework.service.impl;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.NewPassword;
 import ru.skypro.homework.dto.UpdateUser;
 import ru.skypro.homework.dto.User;
@@ -10,12 +12,21 @@ import ru.skypro.homework.mapper.UserMapper;
 import ru.skypro.homework.repository.UserRepository;
 import ru.skypro.homework.service.UserService;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.Random;
+
 @Service
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder encoder;
     private final UserMapper mapper;
+    @Value("${app.avatar.dir}")
+    private String avatarDirectoryPath;
 
     public UserServiceImpl(UserRepository userRepository, PasswordEncoder encoder, UserMapper mapper) {
         this.userRepository = userRepository;
@@ -49,5 +60,20 @@ public class UserServiceImpl implements UserService {
         user.setPhone(updateUser.getPhone());
         userRepository.save(user);
         return updateUser;
+    }
+
+    public void updateUserImage(String name, MultipartFile image) throws IOException {
+        Path avatarDirectory = Paths.get(avatarDirectoryPath);
+        UserEntity user = userRepository.findByEmail(name);
+        Files.createDirectories(avatarDirectory);
+        String extension = getFileExtension(image.getOriginalFilename());
+        String fileName = this.getClass().getSimpleName() + user.getId() + extension;
+        Path filePath = avatarDirectory.resolve(fileName);
+        Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+        user.setImage("/images/" + fileName);
+    }
+
+    private String getFileExtension(String filename) {
+        return filename.substring(filename.lastIndexOf('.'));
     }
 }
