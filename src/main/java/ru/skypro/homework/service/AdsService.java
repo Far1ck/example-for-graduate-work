@@ -15,4 +15,5 @@ public interface AdsService {
     ExtendedAd getAds(int id);
     int removeAd(String name, int id);
     Ad updateAds(String name, CreateOrUpdateAd properties, int id) throws SecurityException;
+    Ads getAdsMe(String name);
 }
