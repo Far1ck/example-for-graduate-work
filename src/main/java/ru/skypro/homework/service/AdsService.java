@@ -16,4 +16,5 @@ public interface AdsService {
     int removeAd(String name, int id);
     Ad updateAds(String name, CreateOrUpdateAd properties, int id) throws SecurityException;
     Ads getAdsMe(String name);
+    byte[] updateImage(String name, int id, MultipartFile image) throws IOException;
 }

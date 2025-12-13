@@ -42,6 +42,9 @@ public class AdvertisementsController {
     public ResponseEntity<Ad> addAd(@RequestParam("properties") @Valid CreateOrUpdateAd properties,
                                     @RequestParam("image") MultipartFile image,
                                     Authentication authentication) throws IOException {
+        if (image.isEmpty() || !image.getContentType().startsWith("image/")) {
+            return ResponseEntity.badRequest().build();
+        }
         Ad ad = adsService.addAd(authentication.getName(), properties, image);
         return ResponseEntity.status(HttpStatus.CREATED).body(ad);
     }
@@ -132,11 +135,17 @@ public class AdvertisementsController {
     @ApiResponse(responseCode = "403", description = "Forbidden")
     @ApiResponse(responseCode = "404", description = "Not found")
     public ResponseEntity<byte[]> updateImage(@PathVariable("id") int id,
-                                              @RequestParam("image") MultipartFile image) {
-        byte[] updatedImage = new byte[1];
-        if (false) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+                                              @RequestParam("image") MultipartFile image,
+                                              Authentication authentication) throws IOException {
+        if (image.isEmpty() || !image.getContentType().startsWith("image/")) {
+            return ResponseEntity.badRequest().build();
         }
+        try {
+            byte[] updatedImage = adsService.updateImage(authentication.getName(), id, image);
+        } catch (SecurityException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        byte[] updatedImage = new byte[1];
         if (false) {
             return ResponseEntity.notFound().build();
         }
