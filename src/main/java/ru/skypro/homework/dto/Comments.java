@@ -9,5 +9,5 @@ import java.util.List;
 public class Comments {
 
     private int count;
-    private List<Comment> results = new ArrayList<>();
+    private List<Comment> results;
 }
