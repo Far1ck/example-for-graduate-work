@@ -43,7 +43,7 @@ public class AuthServiceImpl implements AuthService {
         newUser.setFirstName(register.getFirstName());
         newUser.setLastName(register.getLastName());
         newUser.setPhone(register.getPhone());
-        newUser.setRole(register.getRole());
+        newUser.setRole(register.getRole().name());
         newUser.setPassword(encoder.encode(register.getPassword()));
         newUser.setEnabled(true);
         usersService.createUser(newUser);

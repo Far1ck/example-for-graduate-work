@@ -67,7 +67,7 @@ public class CommentsServiceImpl implements CommentsService {
             return 1;
         }
         UserEntity user = usersRepository.findByEmail(name);
-        if (!user.getRole().name().equals("ADMIN") && !comment.getCommentAuthor().getEmail().equals(name)) {
+        if (!user.getRole().equals("ADMIN") && !comment.getCommentAuthor().getEmail().equals(name)) {
             return 2;
         }
 
@@ -82,7 +82,7 @@ public class CommentsServiceImpl implements CommentsService {
         }
 
         UserEntity user = usersRepository.findByEmail(name);
-        if (!user.getRole().name().equals("ADMIN") && !comment.getCommentAuthor().getEmail().equals(name)) {
+        if (!user.getRole().equals("ADMIN") && !comment.getCommentAuthor().getEmail().equals(name)) {
             throw new SecurityException();
         }
 

@@ -18,7 +18,7 @@ public class AdEntity {
     private String title;
     private String description;
 
-    @OneToMany(mappedBy = "commentAuthor", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "commentAd", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<CommentEntity> comments;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -17,6 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Random;
 
 @Service
 public class UsersServiceImpl implements UsersService {
@@ -24,6 +25,7 @@ public class UsersServiceImpl implements UsersService {
     private final UsersRepository usersRepository;
     private final PasswordEncoder encoder;
     private final UserMapper mapper;
+    private final Random rnd = new Random();
     @Value("${app.images.dir}")
     private String avatarDirectoryPath;
 
@@ -66,10 +68,11 @@ public class UsersServiceImpl implements UsersService {
         UserEntity user = usersRepository.findByEmail(name);
         Files.createDirectories(avatarDirectory);
         String extension = getFileExtension(image.getOriginalFilename());
-        String fileName = this.getClass().getSimpleName() + user.getId() + extension;
+        String fileName = System.currentTimeMillis() + rnd.nextInt(1000) + extension;
         Path filePath = avatarDirectory.resolve(fileName);
         Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
         user.setImage("/images/" + fileName);
+        usersRepository.save(user);
     }
 
     private String getFileExtension(String filename) {
