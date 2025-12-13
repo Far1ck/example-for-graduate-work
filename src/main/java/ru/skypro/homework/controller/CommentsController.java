@@ -9,12 +9,15 @@ import org.springframework.web.bind.annotation.*;
 import ru.skypro.homework.dto.Comment;
 import ru.skypro.homework.dto.Comments;
 import ru.skypro.homework.dto.CreateOrUpdateComment;
+import ru.skypro.homework.service.CommentsService;
 
 @CrossOrigin(value = "http://localhost:3000")
 @RestController
 @RequestMapping("/ads")
 @RequiredArgsConstructor
 public class CommentsController {
+
+    private final CommentsService commentsService;
 
     @GetMapping("/{id}/comments")
     @Operation(
@@ -26,13 +29,11 @@ public class CommentsController {
     @ApiResponse(responseCode = "401", description = "Unauthorized")
     @ApiResponse(responseCode = "404", description = "Not found")
     public ResponseEntity<Comments> getComments(@PathVariable("id") int id) {
-        if (false) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-        if (false) {
+        Comments comments = commentsService.getComments(id);
+        if (comments == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(new Comments());
+        return ResponseEntity.ok(comments);
     }
 
     @PostMapping("/{id}/comments")
