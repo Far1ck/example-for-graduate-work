@@ -31,7 +31,8 @@ public class AdvertisementsController {
         return ResponseEntity.ok(adsService.getAllAds());
     }
 
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(
             summary = "Добавление объявления",
             tags = {"Объявления"},
@@ -39,8 +40,8 @@ public class AdvertisementsController {
     )
     @ApiResponse(responseCode = "201", description = "Created")
     @ApiResponse(responseCode = "401", description = "Unauthorized")
-    public ResponseEntity<Ad> addAd(@RequestParam("properties") @Valid CreateOrUpdateAd properties,
-                                    @RequestParam("image") MultipartFile image,
+    public ResponseEntity<Ad> addAd(@RequestPart("properties") @Valid CreateOrUpdateAd properties,
+                                    @RequestPart("image") MultipartFile image,
                                     Authentication authentication) throws IOException {
         if (image.isEmpty() || !image.getContentType().startsWith("image/")) {
             return ResponseEntity.badRequest().build();

@@ -21,6 +21,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.Random;
 
 @Service
 public class AdsServiceImpl implements AdsService {
@@ -28,6 +29,7 @@ public class AdsServiceImpl implements AdsService {
     private final AdsRepository adsRepository;
     private final AdMapper adMapper;
     private final UsersRepository usersRepository;
+    private final Random rnd = new Random();
 
     @Value("${app.images.dir}")
     private String adsImagePath;
@@ -55,7 +57,7 @@ public class AdsServiceImpl implements AdsService {
 
         Files.createDirectories(adsImageDirectory);
         String extension = getFileExtension(image.getOriginalFilename());
-        String fileName = this.getClass().getSimpleName() + ad.getId() + extension;
+        String fileName = System.currentTimeMillis() + rnd.nextInt(1000) + extension;
         Path filePath = adsImageDirectory.resolve(fileName);
         Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
@@ -92,7 +94,7 @@ public class AdsServiceImpl implements AdsService {
             return 1;
         }
         UserEntity user = usersRepository.findByEmail(name);
-        if (!user.getRole().name().equals("ADMIN") && !ad.getAdAuthor().getEmail().equals(name)) {
+        if (!user.getRole().equals("ADMIN") && !ad.getAdAuthor().getEmail().equals(name)) {
             return 2;
         }
 
@@ -106,7 +108,7 @@ public class AdsServiceImpl implements AdsService {
             return null;
         }
         UserEntity user = usersRepository.findByEmail(name);
-        if (!user.getRole().name().equals("ADMIN") && !ad.getAdAuthor().getEmail().equals(name)) {
+        if (!user.getRole().equals("ADMIN") && !ad.getAdAuthor().getEmail().equals(name)) {
             throw new SecurityException();
         }
 
@@ -135,7 +137,7 @@ public class AdsServiceImpl implements AdsService {
             return null;
         }
         UserEntity user = usersRepository.findByEmail(name);
-        if (!user.getRole().name().equals("ADMIN") && !ad.getAdAuthor().getEmail().equals(name)) {
+        if (!user.getRole().equals("ADMIN") && !ad.getAdAuthor().getEmail().equals(name)) {
             throw new SecurityException();
         }
         Files.createDirectories(adsImageDirectory);
@@ -143,7 +145,7 @@ public class AdsServiceImpl implements AdsService {
         Path oldFilePath = adsImageDirectory.resolve(oldFileName);
         Files.deleteIfExists(oldFilePath);
         String extension = getFileExtension(image.getOriginalFilename());
-        String newFileName = this.getClass().getSimpleName() + ad.getId() + extension;
+        String newFileName = System.currentTimeMillis() + rnd.nextInt(1000) + extension;
         Path newFilePath = adsImageDirectory.resolve(newFileName);
         Files.copy(image.getInputStream(), newFilePath, StandardCopyOption.REPLACE_EXISTING);
         ad.setImage("images/" + newFileName);

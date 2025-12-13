@@ -20,7 +20,7 @@ public class UserEntity {
     @Column(name = "last_name")
     private String lastName;
     private String phone;
-    private Role role;
+    private String role;
     private String image;
     private String password;
     private boolean enabled;

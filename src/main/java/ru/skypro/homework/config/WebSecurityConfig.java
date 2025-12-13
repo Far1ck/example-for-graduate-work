@@ -5,10 +5,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
+import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -30,10 +30,11 @@ public class WebSecurityConfig {
     };
 
     @Bean
-    public UserDetailsService userDetailsService(DataSource dataSource) {
+    public UserDetailsManager userDetailsService(DataSource dataSource) {
         JdbcUserDetailsManager manager = new JdbcUserDetailsManager(dataSource);
         manager.setUsersByUsernameQuery("SELECT email, password, enabled FROM users WHERE email = ?");
         manager.setAuthoritiesByUsernameQuery("SELECT email, role FROM users WHERE email = ?");
+        manager.setUserExistsSql("SELECT email FROM users WHERE email =?");
         return manager;
     }
 
@@ -46,7 +47,7 @@ public class WebSecurityConfig {
                                 authorization
                                         .requestMatchers(AUTH_WHITELIST)
                                         .permitAll()
-                                        .requestMatchers("/ads/**", "/users/**")
+                                        .requestMatchers("/ads/**", "/users/**", "/images/**")
                                         .authenticated())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .httpBasic(Customizer.withDefaults());
