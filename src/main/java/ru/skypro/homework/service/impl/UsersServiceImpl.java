@@ -24,7 +24,7 @@ public class UsersServiceImpl implements UsersService {
     private final UsersRepository usersRepository;
     private final PasswordEncoder encoder;
     private final UserMapper mapper;
-    @Value("${app.avatar.dir}")
+    @Value("${app.images.dir}")
     private String avatarDirectoryPath;
 
     public UsersServiceImpl(UsersRepository usersRepository, PasswordEncoder encoder, UserMapper mapper) {

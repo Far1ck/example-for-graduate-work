@@ -29,7 +29,7 @@ public class AdsServiceImpl implements AdsService {
     private final AdMapper adMapper;
     private final UsersRepository usersRepository;
 
-    @Value("${app.ads.dir}")
+    @Value("${app.images.dir}")
     private String adsImagePath;
 
     public AdsServiceImpl(AdsRepository adsRepository, AdMapper adMapper, UsersRepository usersRepository) {
