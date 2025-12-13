@@ -60,4 +60,18 @@ public class CommentsServiceImpl implements CommentsService {
         commentsRepository.save(comment);
         return mapper.toDto(comment);
     }
+
+    public int deleteComment(String name, int adId, int commentId) {
+        CommentEntity comment = commentsRepository.findById(commentId).orElse(null);
+        if (comment == null) {
+            return 1;
+        }
+        UserEntity user = usersRepository.findByEmail(name);
+        if (!user.getRole().name().equals("ADMIN") && !comment.getCommentAuthor().getEmail().equals(name)) {
+            return 2;
+        }
+
+        commentsRepository.deleteById(commentId);
+        return 0;
+    }
 }

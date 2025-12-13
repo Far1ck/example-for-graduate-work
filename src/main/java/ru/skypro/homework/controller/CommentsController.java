@@ -66,15 +66,14 @@ public class CommentsController {
     @ApiResponse(responseCode = "401", description = "Unauthorized")
     @ApiResponse(responseCode = "403", description = "Forbidden")
     @ApiResponse(responseCode = "404", description = "Not found")
-    public ResponseEntity<?> deleteComment(@PathVariable("adId") int adId,
-                                           @PathVariable("commentId") int commentId) {
-        if (false) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-        if (false) {
+    public ResponseEntity<Void> deleteComment(@PathVariable("adId") int adId,
+                                           @PathVariable("commentId") int commentId,
+                                              Authentication authentication) {
+        int result = commentsService.deleteComment(authentication.getName(), adId, commentId);
+        if (result == 1) {
             return ResponseEntity.notFound().build();
         }
-        if (false) {
+        if (result == 2) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         return ResponseEntity.ok().build();
