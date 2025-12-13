@@ -3,8 +3,10 @@ package ru.skypro.homework.service.impl;
 import org.springframework.stereotype.Service;
 import ru.skypro.homework.dto.Comment;
 import ru.skypro.homework.dto.Comments;
+import ru.skypro.homework.dto.CreateOrUpdateComment;
 import ru.skypro.homework.entity.AdEntity;
 import ru.skypro.homework.entity.CommentEntity;
+import ru.skypro.homework.entity.UserEntity;
 import ru.skypro.homework.mapper.CommentMapper;
 import ru.skypro.homework.repository.AdsRepository;
 import ru.skypro.homework.repository.CommentsRepository;
@@ -40,5 +42,22 @@ public class CommentsServiceImpl implements CommentsService {
         result.setCount(comments.size());
         result.setResults(comments);
         return result;
+    }
+
+    public Comment addComment(String name, int id, CreateOrUpdateComment properties) {
+        AdEntity ad = adsRepository.findById(id).orElse(null);
+        if (ad == null) {
+            return null;
+        }
+        UserEntity user = usersRepository.findByEmail(name);
+        CommentEntity comment = new CommentEntity();
+        comment.setAuthorFirstName(user.getFirstName());
+        comment.setAuthorImage(user.getImage());
+        comment.setCreatedAt(System.currentTimeMillis());
+        comment.setText(properties.getText());
+        comment.setCommentAuthor(user);
+        comment.setCommentAd(ad);
+        commentsRepository.save(comment);
+        return mapper.toDto(comment);
     }
 }
