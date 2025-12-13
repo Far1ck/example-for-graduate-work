@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import ru.skypro.homework.dto.Ad;
 import ru.skypro.homework.dto.Comment;
 import ru.skypro.homework.dto.Comments;
 import ru.skypro.homework.dto.CreateOrUpdateComment;
@@ -91,16 +92,16 @@ public class CommentsController {
     @ApiResponse(responseCode = "404", description = "Not found")
     public ResponseEntity<Comment> updateComment(@PathVariable("adId") int adId,
                                            @PathVariable("commentId") int commentId,
-                                           @RequestBody CreateOrUpdateComment properties) {
-        if (false) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-        if (false) {
-            return ResponseEntity.notFound().build();
-        }
-        if (false) {
+                                           @RequestBody CreateOrUpdateComment properties,
+                                                 Authentication authentication) {
+        try {
+            Comment comment = commentsService.updateComment(authentication.getName(), properties, commentId, adId);
+            if (comment == null) {
+                return ResponseEntity.notFound().build();
+            }
+            return ResponseEntity.ok(comment);
+        } catch (SecurityException e) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-        return ResponseEntity.ok(new Comment());
     }
 }
