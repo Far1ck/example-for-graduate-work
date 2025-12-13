@@ -74,4 +74,20 @@ public class CommentsServiceImpl implements CommentsService {
         commentsRepository.deleteById(commentId);
         return 0;
     }
+
+    public Comment updateComment(String name, CreateOrUpdateComment properties, int commentId, int adId) throws SecurityException {
+        CommentEntity comment = commentsRepository.findById(commentId).orElse(null);
+        if (comment == null) {
+            return null;
+        }
+
+        UserEntity user = usersRepository.findByEmail(name);
+        if (!user.getRole().name().equals("ADMIN") && !comment.getCommentAuthor().getEmail().equals(name)) {
+            throw new SecurityException();
+        }
+
+        comment.setText(properties.getText());
+        commentsRepository.save(comment);
+        return mapper.toDto(comment);
+    }
 }
