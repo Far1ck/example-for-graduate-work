@@ -7,4 +7,5 @@ import ru.skypro.homework.dto.CreateOrUpdateComment;
 public interface CommentsService {
     Comments getComments(int id);
     Comment addComment(String name, int id, CreateOrUpdateComment properties);
+    int deleteComment(String name, int adId, int commentId);
 }
