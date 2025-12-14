@@ -17,9 +17,31 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import javax.sql.DataSource;
 import java.util.List;
 
+/**
+ * Конфигурация безопасности веб‑приложения на основе Spring Security.
+ *
+ * <p>Данный класс определяет:
+ * <ul>
+ *   <li>сервис управления пользователями ({@link UserDetailsManager});</li>
+ *   <li>цепочку фильтров безопасности ({@link SecurityFilterChain});</li>
+ *   <li>настройки CORS ({@link CorsConfigurationSource});</li>
+ *   <li>кодировщик паролей ({@link PasswordEncoder}).</li>
+ * </ul>
+ *
+ * @see Configuration
+ */
 @Configuration
 public class WebSecurityConfig {
 
+    /**
+     * Список URL‑путей, для которых аутентификация не требуется (белый список).
+     *
+     * <p>Включает:
+     * <ul>
+     *   <li>ресурсы Swagger для документации API;</li>
+     *   <li>страницы входа и регистрации.</li>
+     * </ul>
+     */
     private static final String[] AUTH_WHITELIST = {
             "/swagger-resources/**",
             "/swagger-ui.html",
@@ -29,6 +51,20 @@ public class WebSecurityConfig {
             "/register"
     };
 
+    /**
+     * Создаёт и настраивает сервис управления пользователями на основе JDBC.
+     *
+     * <p>Настраивает SQL‑запросы для:
+     * <ul>
+     *   <li>получения пользователя по email;</li>
+     *   <li>получения ролей пользователя;</li>
+     *   <li>проверки существования пользователя.</li>
+     * </ul>
+     *
+     * @param dataSource источник данных для подключения к базе
+     * @return настроенный экземпляр {@link UserDetailsManager}
+     * @see JdbcUserDetailsManager
+     */
     @Bean
     public UserDetailsManager userDetailsService(DataSource dataSource) {
         JdbcUserDetailsManager manager = new JdbcUserDetailsManager(dataSource);
@@ -38,6 +74,23 @@ public class WebSecurityConfig {
         return manager;
     }
 
+    /**
+     * Определяет цепочку фильтров безопасности для HTTP‑запросов.
+     *
+     * <p>Настройки включают:
+     * <ul>
+     *   <li>отключение CSRF‑защиты;</li>
+     *   <li>разрешение доступа без аутентификации для путей из {@link #AUTH_WHITELIST};</li>
+     *   <li>обязательную аутентификацию для путей /ads/**, /users/**, /images/**;</li>
+     *   <li>включение CORS с настройками из {@link #corsConfigurationSource()};</li>
+     *   <li>базовую HTTP‑аутентификацию.</li>
+     * </ul>
+     *
+     * @param http объект конфигурации безопасности HTTP
+     * @return настроенная цепочка фильтров {@link SecurityFilterChain}
+     * @throws Exception при ошибках конфигурации
+     * @see HttpSecurity
+     */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -54,6 +107,21 @@ public class WebSecurityConfig {
         return http.build();
     }
 
+    /**
+     * Создаёт источник конфигурации CORS для управления кросс‑доменными запросами.
+     *
+     * <p>Настройки CORS:
+     * <ul>
+     *   <li>разрешённые origins: http://localhost:3000, http://localhost:8080;</li>
+     *   <li>разрешённые методы: GET, POST, PUT, PATCH, DELETE;</li>
+     *   <li>разрешённые заголовки: все (*);</li>
+     *   <li>разрешено использование учётных данных (cookies, авторизации).</li>
+     * </ul>
+     *
+     * @return экземпляр {@link CorsConfigurationSource} с настроенными правилами CORS
+     * @see CorsConfiguration
+     * @see UrlBasedCorsConfigurationSource
+     */
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
@@ -66,6 +134,16 @@ public class WebSecurityConfig {
         return source;
     }
 
+    /**
+     * Предоставляет кодировщик паролей на основе алгоритма BCrypt.
+     *
+     * <p>BCrypt — криптографическая функция для хеширования паролей с солью,
+     * обеспечивающая защиту от перебора и радужных таблиц.
+     *
+     * @return экземпляр {@link BCryptPasswordEncoder} для кодирования и проверки паролей
+     * @see PasswordEncoder
+     * @see BCryptPasswordEncoder
+     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
