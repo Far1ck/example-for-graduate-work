@@ -18,19 +18,97 @@ import ru.skypro.homework.service.AdsService;
 
 import java.io.IOException;
 
+/**
+ * Контроллер для управления объявлениями в системе.
+ *
+ * <p>Предоставляет REST‑конечные точки для:
+ * <ul>
+ *   <li>получения списка всех объявлений;</li>
+ *   <li>создания нового объявления (с изображением);</li>
+ *   <li>получения детальной информации об объявлении;</li>
+ *   <li>удаления объявления;</li>
+ *   <li>обновления информации об объявлении;</li>
+ *   <li>получения объявлений текущего пользователя;</li>
+ *   <li>обновления изображения объявления.</li>
+ * </ul>
+ *
+ * <p>Основные особенности:
+ * <ul>
+ *   <li>помечен аннотацией {@link RestController}, что автоматически делает все методы возвращающими данные в формате JSON;</li>
+ *   <li>имеет базовый путь {@code /ads} (задаётся через {@link RequestMapping});</li>
+ *   <li>поддерживает CORS‑запросы с источника {@code http://localhost:3000};</li>
+ *   <li>использует внедрение зависимостей через конструктор (аннотация {@link RequiredArgsConstructor});</li>
+ *   <li>для документации API используются аннотации Swagger/OpenAPI ({@link Operation}, {@link ApiResponse}).</li>
+ * </ul>
+ *
+ * @see CrossOrigin
+ * @see RestController
+ * @see RequestMapping
+ * @see RequiredArgsConstructor
+ * @see AdsService
+ */
 @CrossOrigin(value = "http://localhost:3000")
 @RestController
 @RequestMapping("/ads")
 @RequiredArgsConstructor
 public class AdvertisementsController {
 
+    /**
+     * Сервис для бизнес‑логики работы с объявлениями.
+     *
+     * <p>Используется для:
+     * <ul>
+     *   <li>получения списков объявлений;</li>
+     *   <li>создания, обновления и удаления объявлений;</li>
+     *   <li>работы с изображениями объявлений.</li>
+     * </ul>
+     *
+     * @see AdsService
+     */
     private final AdsService adsService;
 
+    /**
+     * Получает список всех объявлений в системе.
+     *
+     * <p>Endpoint: {@code GET /ads}
+     *
+     * @return {@link ResponseEntity} с объектом {@link Ads}, содержащим:
+     *         <ul>
+     *           <li>{@code count} — общее количество объявлений;</li>
+     *           <li>{@code results} — список объявлений (объекты {@link Ad}).</li>
+     *         </ul>
+     *         Статус {@code 200 OK}.
+     */
     @GetMapping
     public ResponseEntity<Ads> getAllAds() {
         return ResponseEntity.ok(adsService.getAllAds());
     }
 
+    /**
+     * Добавляет новое объявление с изображением.
+     *
+     * <p>Endpoint: {@code POST /ads} (с multipart‑формой)
+     *
+     * <p>Алгоритм работы:
+     * <ol>
+     *   <li>Проверяет, что файл изображения не пуст и имеет MIME‑тип {@code image/*}.</li>
+     *   <li>Передаёт данные в сервис {@link AdsService#addAd} для создания объявления.</li>
+     *   <li>Возвращает созданное объявление со статусом {@code 201 Created}.</li>
+     * </ol>
+     *
+     * @param properties DTO {@link CreateOrUpdateAd} с данными объявления (заголовок, цена, описание)
+     * @param image файл изображения объявления в формате {@link MultipartFile}
+     * @param authentication объект аутентификации текущего пользователя
+     * @return {@link ResponseEntity} со статусом:
+     *         <ul>
+     *           <li>{@code 201 Created} при успешном создании, тело — объект {@link Ad};</li>
+     *           <li>{@code 400 Bad Request} если файл пуст или имеет неверный тип;</li>
+     *           <li>{@code 401 Unauthorized} если пользователь не аутентифицирован.</li>
+     *         </ul>
+     * @throws IOException если возникла ошибка при работе с файлом
+     * @see CreateOrUpdateAd
+     * @see MultipartFile
+     */
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(
@@ -50,6 +128,20 @@ public class AdvertisementsController {
         return ResponseEntity.status(HttpStatus.CREATED).body(ad);
     }
 
+    /**
+     * Получает детальную информацию об объявлении по его ID.
+     *
+     * <p>Endpoint: {@code GET /ads/{id}}
+     *
+     * @param id идентификатор объявления
+     * @return {@link ResponseEntity} со статусом:
+     *         <ul>
+     *           <li>{@code 200 OK} при нахождении объявления, тело — объект {@link ExtendedAd};</li>
+     *           <li>{@code 404 Not Found} если объявление не существует;</li>
+     *           <li>{@code 401 Unauthorized} если пользователь не аутентифицирован.</li>
+     *         </ul>
+     * @see ExtendedAd
+     */
     @GetMapping("/{id}")
     @Operation(
             summary = "Получение информации об объявлении",
@@ -67,6 +159,21 @@ public class AdvertisementsController {
         return ResponseEntity.ok(result);
     }
 
+    /**
+     * Удаляет объявление по его ID.
+     *
+     * <p>Endpoint: {@code DELETE /ads/{id}}
+     *
+     * @param id идентификатор объявления
+     * @param authentication объект аутентификации текущего пользователя
+     * @return {@link ResponseEntity} со статусом:
+     *         <ul>
+     *           <li>{@code 204 No Content} при успешном удалении;</li>
+     *           <li>{@code 404 Not Found} если объявление не существует;</li>
+     *           <li>{@code 403 Forbidden} если пользователь не имеет прав на удаление;</li>
+     *           <li>{@code 401 Unauthorized} если пользователь не аутентифицирован.</li>
+     *         </ul>
+     */
     @DeleteMapping("/{id}")
     @Operation(
             summary = "Удаление объявления",
@@ -88,6 +195,24 @@ public class AdvertisementsController {
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * Обновляет информацию об объявлении (заголовок, цену, описание).
+     *
+     * <p>Endpoint: {@code PATCH /ads/{id}}
+     *
+     * @param id идентификатор объявления
+     * @param properties DTO {@link CreateOrUpdateAd} с новыми данными объявления
+     * @param authentication объект аутентификации текущего пользователя
+     * @return {@link ResponseEntity} со статусом:
+     *         <ul>
+     *           <li>{@code 200 OK} при успешном обновлении, тело — объект {@link Ad};</li>
+     *           <li>{@code 404 Not Found} если объявление не существует;</li>
+     *           <li>{@code 403 Forbidden} если пользователь не имеет прав на обновление;</li>
+     *           <li>{@code 401 Unauthorized} если пользователь не аутентифицирован.</li>
+     *         </ul>
+     * @see CreateOrUpdateAd
+     * @see Ad
+     */
     @PatchMapping("/{id}")
     @Operation(
             summary = "Обновление информации об объявлении",
@@ -112,6 +237,21 @@ public class AdvertisementsController {
         }
     }
 
+    /**
+     * Получает список объявлений текущего авторизованного пользователя.
+     *
+     * <p>Endpoint: {@code GET /ads/me}
+     *
+     * @param authentication объект аутентификации текущего пользователя
+     * @return {@link ResponseEntity} с объектом {@link Ads}, содержащим:
+     *         <ul>
+     *           <li>{@code count} — количество объявлений пользователя;</li>
+     *           <li>{@code results} — список его объявлений (объекты {@link Ad}).</li>
+     *         </ul>
+     *         Статус {@code 200 OK}.
+     * @see Ads
+     * @see Ad
+     */
     @GetMapping("/me")
     @Operation(
             summary = "Получение объявлений авторизованного пользователя",
@@ -125,6 +265,32 @@ public class AdvertisementsController {
         return ResponseEntity.ok(ads);
     }
 
+    /**
+     * Обновляет изображение объявления.
+     *
+     * <p>Endpoint: {@code PATCH /ads/{id}/image} (с multipart‑формой)
+     *
+     * <p>Алгоритм работы:
+     * <ol>
+     *   <li>Проверяет, что файл изображения не пуст и имеет MIME‑тип {@code image/*}.</li>
+     *   <li>Передаёт данные в сервис {@link AdsService#updateImage} для обновления изображения.</li>
+     *   <li>Возвращает обновлённое изображение.</li>
+     * </ol>
+     *
+     * @param id идентификатор объявления
+     * @param image новый файл изображения в формате {@link MultipartFile}
+     * @param authentication объект аутентификации текущего пользователя
+     * @return {@link ResponseEntity} со статусом:
+     *         <ul>
+     *           <li>{@code 200 OK} при успешном обновлении, тело — байтовый массив изображения;</li>
+     *           <li>{@code 400 Bad Request} если файл пуст или имеет неверный тип;</li>
+     *           <li>{@code 404 Not Found} если объявление не существует;</li>
+     *           <li>{@code 403 Forbidden} если пользователь не имеет прав на обновление;</li>
+     *           <li>{@code 401 Unauthorized} если пользователь не аутентифицирован.</li>
+     *         </ul>
+     * @throws IOException если возникла ошибка при работе с файлом
+     * @see MultipartFile
+     */
     @PatchMapping(value = "/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(
             summary = "Обновление картинки объявления",
@@ -143,16 +309,9 @@ public class AdvertisementsController {
         }
         try {
             byte[] updatedImage = adsService.updateImage(authentication.getName(), id, image);
+            return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM).body(updatedImage);
         } catch (SecurityException e) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-        byte[] updatedImage = new byte[1];
-        if (false) {
-            return ResponseEntity.notFound().build();
-        }
-        if (false) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
-        return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM).body(updatedImage);
     }
 }
