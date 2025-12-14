@@ -301,7 +301,6 @@ public class AdsServiceImpl implements AdsService {
      */
     @Override
     public byte[] updateImage(String name, int id, MultipartFile image) throws IOException {
-        Path adsImageDirectory = Paths.get(adsImagePath);
         AdEntity ad = adsRepository.findById(id).orElse(null);
         if (ad == null) {
             return null;
@@ -310,6 +309,7 @@ public class AdsServiceImpl implements AdsService {
         if (!user.getRole().equals("ADMIN") && !ad.getAdAuthor().getEmail().equals(name)) {
             throw new SecurityException();
         }
+        Path adsImageDirectory = Paths.get(adsImagePath);
         Files.createDirectories(adsImageDirectory);
         String oldFileName = ad.getImage().substring(ad.getImage().lastIndexOf('/') + 1);
         Path oldFilePath = adsImageDirectory.resolve(oldFileName);
@@ -331,7 +331,7 @@ public class AdsServiceImpl implements AdsService {
      * @param filename исходное имя файла
      * @return расширение файла (подстрока после последней точки)
      */
-    private String getFileExtension(String filename) {
+    public String getFileExtension(String filename) {
         return filename.substring(filename.lastIndexOf('.'));
     }
 
