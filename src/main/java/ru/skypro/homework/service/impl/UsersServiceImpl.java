@@ -139,7 +139,7 @@ public class UsersServiceImpl implements UsersService {
     @Override
     public boolean setPassword(String username, NewPassword password) {
         UserEntity user = usersRepository.findByEmail(username);
-        if (!encoder.matches(password.getCurrentPassword(), user.getPassword())) {
+        if (user == null || !encoder.matches(password.getCurrentPassword(), user.getPassword())) {
             return false;
         }
         user.setPassword(encoder.encode(password.getNewPassword()));
@@ -248,7 +248,7 @@ public class UsersServiceImpl implements UsersService {
      * @return расширение файла в виде строки (с точкой), например {@code ".png"}
      * @throws IllegalArgumentException если имя файла не содержит точки или пусто
      */
-    private String getFileExtension(String filename) {
+    public String getFileExtension(String filename) {
         return filename.substring(filename.lastIndexOf('.'));
     }
 }
