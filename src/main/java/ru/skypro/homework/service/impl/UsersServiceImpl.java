@@ -223,8 +223,10 @@ public class UsersServiceImpl implements UsersService {
         Path avatarDirectory = Paths.get(avatarDirectoryPath);
         Files.createDirectories(avatarDirectory);
         UserEntity user = usersRepository.findByEmail(name);
-        Path oldFilePath = avatarDirectory.resolve(user.getImage());
-        Files.deleteIfExists(oldFilePath);
+        if (user.getImage() != null) {
+            Path oldFilePath = avatarDirectory.resolve(user.getImage());
+            Files.deleteIfExists(oldFilePath);
+        }
         String extension = getFileExtension(image.getOriginalFilename());
         String fileName = System.currentTimeMillis() + rnd.nextInt(1000) + extension;
         Path filePath = avatarDirectory.resolve(fileName);
