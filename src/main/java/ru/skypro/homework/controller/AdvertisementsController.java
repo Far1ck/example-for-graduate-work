@@ -184,7 +184,7 @@ public class AdvertisementsController {
     @ApiResponse(responseCode = "401", description = "Unauthorized")
     @ApiResponse(responseCode = "403", description = "Forbidden")
     @ApiResponse(responseCode = "404", description = "Not found")
-    public ResponseEntity<Void> removeAd(@PathVariable("id") int id, Authentication authentication) {
+    public ResponseEntity<Void> removeAd(@PathVariable("id") int id, Authentication authentication) throws IOException {
         int result = adsService.removeAd(authentication.getName(), id);
         if (result == 1) {
             return ResponseEntity.notFound().build();

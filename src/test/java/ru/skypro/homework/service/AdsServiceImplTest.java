@@ -151,18 +151,30 @@ class AdsServiceImplTest {
     }
 
     @Test
-    void removeAd_shouldReturn0_whenAdDeleted() {
+    void removeAd_shouldReturn0_whenAdDeleted() throws IOException {
         when(adsRepository.findById(1)).thenReturn(Optional.of(ad));
         when(usersRepository.findByEmail("user@example.com")).thenReturn(user);
 
-        int result = adsService.removeAd("user@example.com", 1);
+        ReflectionTestUtils.setField(
+                adsService,
+                "adsImagePath",  // имя поля
+                "tmp/images"     // тестовое значение
+        );
 
-        assertEquals(0, result);
-        verify(adsRepository).deleteById(1);
+        try (MockedStatic<Files> mockedFiles = mockStatic(Files.class)) {
+
+            mockedFiles.when(() -> Files.deleteIfExists(any()))
+                    .thenAnswer(invocation -> null);
+
+            int result = adsService.removeAd("user@example.com", 1);
+
+            assertEquals(0, result);
+            verify(adsRepository).deleteById(1);
+        }
     }
 
     @Test
-    void removeAd_shouldReturn1_whenAdNotFound() {
+    void removeAd_shouldReturn1_whenAdNotFound() throws IOException {
         when(adsRepository.findById(999)).thenReturn(Optional.empty());
 
         int result = adsService.removeAd("user@example.com", 999);
@@ -171,7 +183,7 @@ class AdsServiceImplTest {
     }
 
     @Test
-    void removeAd_shouldReturn2_whenUserHasNoRights() {
+    void removeAd_shouldReturn2_whenUserHasNoRights() throws IOException {
         UserEntity otherUser = new UserEntity();
         otherUser.setEmail("other@example.com");
         otherUser.setRole("USER");

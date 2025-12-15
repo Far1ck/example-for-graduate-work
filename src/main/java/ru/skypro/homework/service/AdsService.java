@@ -83,7 +83,7 @@ public interface AdsService {
      *           <li>2 — у пользователя нет прав на удаление.</li>
      *         </ul>
      */
-    int removeAd(String name, int id);
+    int removeAd(String name, int id) throws IOException;
 
     /**
      * Обновляет информацию об объявлении (заголовок, цену, описание).
