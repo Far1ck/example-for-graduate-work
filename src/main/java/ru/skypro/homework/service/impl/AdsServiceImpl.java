@@ -1,5 +1,6 @@
 package ru.skypro.homework.service.impl;
 
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -8,9 +9,11 @@ import ru.skypro.homework.dto.Ads;
 import ru.skypro.homework.dto.CreateOrUpdateAd;
 import ru.skypro.homework.dto.ExtendedAd;
 import ru.skypro.homework.entity.AdEntity;
+import ru.skypro.homework.entity.CommentEntity;
 import ru.skypro.homework.entity.UserEntity;
 import ru.skypro.homework.mapper.AdMapper;
 import ru.skypro.homework.repository.AdsRepository;
+import ru.skypro.homework.repository.CommentsRepository;
 import ru.skypro.homework.repository.UsersRepository;
 import ru.skypro.homework.service.AdsService;
 
@@ -79,6 +82,8 @@ public class AdsServiceImpl implements AdsService {
     @Value("${app.images.dir}")
     private String adsImagePath;
 
+    private final CommentsRepository commentsRepository;
+
     /**
      * Конструктор для внедрения зависимостей.
      *
@@ -86,10 +91,11 @@ public class AdsServiceImpl implements AdsService {
      * @param adMapper маппер для преобразования сущностей и DTO
      * @param usersRepository репозиторий пользователей
      */
-    public AdsServiceImpl(AdsRepository adsRepository, AdMapper adMapper, UsersRepository usersRepository) {
+    public AdsServiceImpl(AdsRepository adsRepository, AdMapper adMapper, UsersRepository usersRepository, CommentsRepository commentsRepository) {
         this.adsRepository = adsRepository;
         this.adMapper = adMapper;
         this.usersRepository = usersRepository;
+        this.commentsRepository = commentsRepository;
     }
 
     /**
@@ -203,6 +209,7 @@ public class AdsServiceImpl implements AdsService {
      * @return код результата операции (0, 1 или 2)
      */
     @Override
+    @Transactional
     public int removeAd(String name, int id) throws IOException {
         AdEntity ad = adsRepository.findById(id).orElse(null);
         if (ad == null) {
@@ -217,6 +224,14 @@ public class AdsServiceImpl implements AdsService {
         String fileName = ad.getImage().substring(ad.getImage().lastIndexOf('/') + 1);
         Path filePath = path.resolve(fileName);
         Files.deleteIfExists(filePath);
+        ad.getAdAuthor().getAds().remove(ad);
+        ad.setAdAuthor(null);
+        for (CommentEntity comment : ad.getComments()) {
+            comment.setCommentAd(null);
+            comment.getCommentAuthor().getComments().remove(comment);
+            comment.setCommentAuthor(null);
+            commentsRepository.save(comment);
+        }
         adsRepository.deleteById(id);
         return 0;
     }

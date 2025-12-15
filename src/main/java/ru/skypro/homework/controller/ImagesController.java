@@ -89,6 +89,9 @@ public class ImagesController {
             "image/*"
     })
     public ResponseEntity<byte[]> getImage(@PathVariable("image") String image) throws IOException {
+        if (image == null) {
+            ResponseEntity.notFound().build();
+        }
         Path filePath = Paths.get(imagesPath);
         Path resultPath = filePath.resolve(image);
         return ResponseEntity.ok(Files.readAllBytes(resultPath));
