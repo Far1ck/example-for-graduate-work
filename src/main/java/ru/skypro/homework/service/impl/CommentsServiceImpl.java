@@ -196,7 +196,12 @@ public class CommentsServiceImpl implements CommentsService {
         if (!user.getRole().equals("ADMIN") && !comment.getCommentAuthor().getEmail().equals(name)) {
             return 2;
         }
-
+        AdEntity ad = adsRepository.findById(adId).orElse(null);
+        if (ad == null) {
+            return 1;
+        }
+        ad.getComments().remove(comment);
+        adsRepository.save(ad);
         commentsRepository.deleteById(commentId);
         return 0;
     }
