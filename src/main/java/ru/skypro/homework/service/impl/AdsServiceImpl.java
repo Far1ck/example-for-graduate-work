@@ -203,7 +203,7 @@ public class AdsServiceImpl implements AdsService {
      * @return код результата операции (0, 1 или 2)
      */
     @Override
-    public int removeAd(String name, int id) {
+    public int removeAd(String name, int id) throws IOException {
         AdEntity ad = adsRepository.findById(id).orElse(null);
         if (ad == null) {
             return 1;
@@ -213,6 +213,10 @@ public class AdsServiceImpl implements AdsService {
             return 2;
         }
 
+        Path path = Paths.get(adsImagePath);
+        String fileName = ad.getImage().substring(ad.getImage().lastIndexOf('/') + 1);
+        Path filePath = path.resolve(fileName);
+        Files.deleteIfExists(filePath);
         adsRepository.deleteById(id);
         return 0;
     }
