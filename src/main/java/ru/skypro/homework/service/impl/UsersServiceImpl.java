@@ -224,7 +224,8 @@ public class UsersServiceImpl implements UsersService {
         Files.createDirectories(avatarDirectory);
         UserEntity user = usersRepository.findByEmail(name);
         if (user.getImage() != null) {
-            Path oldFilePath = avatarDirectory.resolve(user.getImage());
+            String fileForRemoving = user.getImage().substring(user.getImage().lastIndexOf('/') + 1);
+            Path oldFilePath = avatarDirectory.resolve(fileForRemoving);
             Files.deleteIfExists(oldFilePath);
         }
         String extension = getFileExtension(image.getOriginalFilename());
